@@ -1,4 +1,4 @@
-# **Khan Academy Clone**
+# **Can Academy**
 
 A simplified Khan Academy-like platform designed to deliver educational content, track user engagement, and analyze learning behaviors. Built using **React** for the frontend, **Node.js** for the backend, and **MongoDB** for data storage.
 
@@ -41,8 +41,8 @@ To set up and run the project locally:
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/khan-academy-clone.git
-   cd khan-academy-clone
+   git clone https://github.com/EHB-MCT/assignment-2-ThomasHeusdens
+   cd Assignment-2-ThomasHeusdens
    ```
 
 2. Set up the backend:
@@ -53,23 +53,27 @@ To set up and run the project locally:
 
 3. Create a `.env` file in the `backend` folder:
    ```
-   MONGO_URI=your_mongodb_connection_string
+   MONGO_URI=mongodb+srv://thomasheusdens:Pilou031003-@web2.j1djvfa.mongodb.net/dev5?retryWrites=true&w=majority
    PORT=5000
    ```
+4. Add this line under Scripts in your package.json in the backend
+   ```
+   "dev": "nodemon server.js"
+   ```
 
-4. Start the backend:
+5. Start the backend:
    ```bash
    npm run dev
    ```
 
-5. Set up the frontend:
+6. Set up the frontend:
    ```bash
    cd ../frontend
    npm install
    npm start
    ```
 
-6. Open your browser and navigate to:
+7. Open your browser and navigate to:
    ```
    http://localhost:3000
    ```

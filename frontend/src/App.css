@@ -1,0 +1,142 @@
+.coursePageContainer {
+    display: flex;
+    margin: 20px;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.unitsSideBar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25%;
+    padding: 20px;
+    border-right: 1px solid #ccc; 
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.unitsSideBar h3{
+    margin-top: 10px;
+}
+
+.unitList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.unitOfList {
+    text-align: center;
+    padding: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s ease; 
+    border-radius: 10px;
+}
+
+.unitOfList:hover {
+    background-color: #f0f0f0;
+}
+
+.unitViewer {
+    width: 75%;
+    padding: 20px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #ffffff;
+}
+
+.unitViewer h1{
+    margin-top: 0;
+}
+
+.embeddedVideo {
+    margin-bottom: 20px;
+}
+
+.coursesContainer {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto 0;
+  padding: 20px;
+  border: solid 2px black;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.courses {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.course {
+  border: 1px solid #ccc;
+  padding: 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.course:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.course h2 {
+  margin-top: 0;
+}
+
+.course p {
+  margin-bottom: 0;
+}
+
+.exitButton {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff4d4f; 
+    color: white;
+    border: none;
+    border-radius: 50%; 
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.3s ease;
+}
+
+.exitButton:hover {
+    background-color: #d9363e; /* Darker red on hover */
+}
+
+
+@media (max-width: 1200px) {
+  .courses {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .courses {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .courses {
+    grid-template-columns: 1fr;
+  }
+}
+
+  

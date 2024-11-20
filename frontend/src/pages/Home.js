@@ -1,34 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Courses from '../components/Courses'; // Adjust the path based on your project structure
 
 /**
- * The Home component displays a list of available courses.
- * It fetches data from the backend API and renders it dynamically.
- * @returns {JSX.Element} The Home component with a list of courses.
+ * The Home component fetches available courses and displays them
+ * using the `Courses` component.
+ * 
+ * @returns {JSX.Element} The Home component displaying a list of courses.
  */
 function Home() {
   const [courses, setCourses] = useState([]);
 
   /**
    * Fetches course data from the backend API when the component mounts.
-   * Updates the `content` state with the retrieved data.
+   * Updates the `courses` state with the retrieved data.
    */
   useEffect(() => {
-    axios.get('http://localhost:5000/api/content')
+    axios.get('http://localhost:5000/api/courses')
       .then(response => setCourses(response.data))
       .catch(err => console.log(err));
-  }, []);  
+  }, []);
 
   return (
-    <div>
-      <h1>Available Courses</h1>
-      {courses.map(course => (
-        <div key={course._id}>
-          <h2>{course.title}</h2>
-          <p>{course.description}</p>
-          <a href={course.videoURL}>Watch Video</a>
-        </div>
-      ))}
+    <div className='coursesContainer'>
+      <h1>Can Academy courses available for you</h1>
+      <Courses courses={courses} />
     </div>
   );
 }
