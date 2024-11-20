@@ -2,14 +2,11 @@ const mongoose = require('mongoose');
 
 /**
  * Defines the schema for the Course collection in MongoDB.
- * Each course contains information about the title, description, video URL, content type, tags, and creation date.
+ * Each course contains information about the title, description and creation date.
  */
 const CourseSchema = new mongoose.Schema({
   title: String,
   description: String,
-  videoURL: String,
-  contentType: String,
-  tags: [String],
   createdAt: { type: Date, default: Date.now },
 });
 

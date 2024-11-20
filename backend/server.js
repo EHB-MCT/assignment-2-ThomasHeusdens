@@ -28,10 +28,13 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .catch(err => console.log(err));
 
 /**
- * API route for course-related operations.
- * All routes prefixed with /api/content will be handled by courseRoutes.
+ * API routes for course and unit-related operations.
+ * - /api/courses: Handles routes for course-related operations.
+ * - /api/units: Handles routes for unit-related operations.
  */
-app.use('/api/content', require('./routes/courseRoutes'));
+app.use('/api/courses', require('./routes/courseRoutes'));
+app.use('/api/units', require('./routes/unitRoutes'));
+
 
 /**
  * Starts the Express server on the specified port.
