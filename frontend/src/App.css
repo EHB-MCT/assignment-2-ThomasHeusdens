@@ -22,6 +22,23 @@
     margin-top: 10px;
 }
 
+.activeUnit {
+  text-align: center;
+  padding: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  background-color: #007bff;
+  color: white; 
+  font-weight: bold;
+  border-radius: 5px; 
+  cursor: default;
+}
+
+.activeUnit:hover {
+  background-color: #0056b3;
+  cursor: default; 
+}
+
 .unitList {
     list-style: none;
     padding: 0;
@@ -117,9 +134,46 @@
 }
 
 .exitButton:hover {
-    background-color: #d9363e; /* Darker red on hover */
+    background-color: #d9363e; 
 }
 
+.nextUnitButton {
+  position: fixed;
+  bottom: 20px;
+  right: 45px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #007bff; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: background-color 0.3s ease;
+}
+
+.nextUnitButton:hover {
+  background-color: #0056b3;
+}
+
+.finishCourseButton {
+  position: fixed;
+  bottom: 20px;
+  right: 45px;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: white;
+  background-color: #04d307; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  transition: background-color 0.3s ease;
+}
+
+.finishCourseButton:hover {
+  background-color: #03a706;
+}
 
 @media (max-width: 1200px) {
   .courses {

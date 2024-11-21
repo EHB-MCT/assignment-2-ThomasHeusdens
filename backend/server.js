@@ -4,13 +4,17 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config();
 
+const authRoutes = require('./routes/authRoutes'); // Import auth routes
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
 /**
  * Middleware to enable Cross-Origin Resource Sharing (CORS).
  * Allows requests from the frontend running on http://localhost:3000.
  */
 app.use(cors({ origin: 'http://localhost:3000' }));
+
 /**
  * Middleware to parse incoming JSON requests.
  * This enables the server to handle JSON payloads in API requests.
@@ -31,10 +35,11 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
  * API routes for course and unit-related operations.
  * - /api/courses: Handles routes for course-related operations.
  * - /api/units: Handles routes for unit-related operations.
+ * - /auth: Handles routes for authentication (register, login, logout).
  */
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/units', require('./routes/unitRoutes'));
-
+app.use('/auth', authRoutes); // Register the auth routes
 
 /**
  * Starts the Express server on the specified port.

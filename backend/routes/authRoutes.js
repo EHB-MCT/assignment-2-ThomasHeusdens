@@ -1,0 +1,211 @@
+const express = require("express");
+const { v4: uuidv4, validate: uuidValidate } = require("uuid");
+const bcrypt = require("bcrypt");
+const User = require("../models/User");
+const mongoose = require("mongoose");
+
+const router = express.Router();
+let activeSessions = {};
+
+/**
+ * POST /auth/register
+ * Registers a new user with a unique UUID and hashed password.
+ * @param {String} username - The user's username.
+ * @param {String} email - The user's email.
+ * @param {String} password - The user's password.
+ * @returns {Object} A success message or an error response.
+ */
+router.post("/register", async (req, res) => {
+  const { username, email, password } = req.body;
+
+  if (!username || !email || !password) {
+    return res.status(400).send({
+      status: "Bad Request",
+      message: "Some fields are missing",
+    });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      id: await getNextSequenceValue("userId"),
+      username,
+      email,
+      password: hashedPassword,
+      uuid: uuidv4(),
+    });
+
+    const savedUser = await newUser.save();
+    res.status(200).send({
+      status: "Saved",
+      message: "User has been saved!",
+      data: savedUser,
+    });
+  } catch (error) {
+    res.status(500).send({
+      error: "Something went wrong!",
+      value: error.message,
+    });
+  }
+});
+
+/**
+ * POST /auth/login
+ * Authenticates a user by checking the email and password.
+ * @param {String} email - The user's email.
+ * @param {String} password - The user's password.
+ * @returns {Object} A success message with a session token or an error response.
+ */
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send({
+      status: "Bad Request",
+      message: "Some fields are missing",
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const sessionToken = uuidv4();
+      activeSessions[user.id] = { email: user.email, token: sessionToken };
+
+      res.status(200).send({
+        status: "Auth Success",
+        message: "You are logged in!",
+        data: { username: user.username, email: user.email, token: sessionToken },
+      });
+    } else {
+      res.status(401).send({
+        status: "Auth Error",
+        message: "Invalid email or password",
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      error: "Something went wrong!",
+      value: error.message,
+    });
+  }
+});
+
+/**
+ * POST /auth/logout
+ * Logs out a user by removing their session.
+ * @returns {Object} A success message or an error response.
+ */
+router.post("/logout", (req, res) => {
+  const token = req.headers.authorization?.split("Bearer ")[1];
+  if (token) {
+    const userId = Object.keys(activeSessions).find((id) => activeSessions[id].token === token);
+    if (userId) {
+      delete activeSessions[userId];
+      return res.status(200).send({
+        status: "Logged Out",
+        message: "You have successfully logged out",
+      });
+    }
+  }
+  res.status(401).send({
+    status: "Auth Error",
+    message: "You must be logged in to log out",
+  });
+});
+
+/**
+ * Generates the next sequence value for incremental IDs.
+ * @param {String} sequenceName - The sequence name (e.g., "userId").
+ * @returns {Number} The next sequence value.
+ */
+async function getNextSequenceValue(sequenceName) {
+  try {
+    const countersCollection = mongoose.connection.collection("Counters");
+
+    // Ensure the counter exists; if not, create it with an initial sequenceValue
+    let sequenceDocument = await countersCollection.findOne({ _id: sequenceName });
+    if (!sequenceDocument) {
+      sequenceDocument = { _id: sequenceName, sequenceValue: 0 };
+      await countersCollection.insertOne(sequenceDocument);
+    }
+
+    // Increment the sequence value and return the updated document
+    const result = await countersCollection.findOneAndUpdate(
+      { _id: sequenceName },
+      { $inc: { sequenceValue: 1 } },
+      {
+        returnDocument: "after", // Ensure updated document is returned
+        upsert: true,
+      }
+    );
+
+    // Validate and extract the sequence value
+    if (!result || typeof result.sequenceValue !== "number") {
+      console.error("Debug: Result structure is invalid", result.sequenceValue);
+      throw new Error("Invalid sequence value returned");
+    }
+
+    // Return the updated sequence value
+    console.log("Successfully generated new sequence value:", result.sequenceValue);
+    return result.sequenceValue;
+  } catch (error) {
+    console.error("Error in getNextSequenceValue:", error);
+    throw error;
+  }
+}
+
+/**
+ * POST /auth/verifyID
+ * Verifies if a UUID exists in the database.
+ * @param {String} uuid - The user's UUID.
+ * @returns {Object} A success message with user details if the UUID is valid.
+ */
+router.post("/verifyID", async (req, res) => {
+  if (!req.body.uuid) {
+    return res.status(400).send({
+      status: "Bad Request",
+      message: "ID is missing",
+    });
+  }
+
+  if (!uuidValidate(req.body.uuid)) {
+    return res.status(400).send({
+      status: "Bad Request",
+      message: "ID is not a valid UUID",
+    });
+  }
+
+  try {
+    const user = await User.findOne({ uuid: req.body.uuid });
+
+    if (user) {
+      res.status(200).send({
+        status: "Verified",
+        message: "Your UUID is valid",
+        data: {
+          username: user.username,
+          email: user.email,
+          uuid: user.uuid,
+        },
+      });
+    } else {
+      res.status(401).send({
+        status: "Verify Error",
+        message: `No user exists with ID: ${req.body.uuid}`,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error: "Something went wrong!",
+      value: error.message,
+    });
+  }
+});
+
+/**
+ * Exports the router to handle authentication-related API routes.
+ * @returns {Router} The router for authentication endpoints
+ */
+module.exports = router;

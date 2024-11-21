@@ -56,6 +56,7 @@ To set up and run the project locally:
    MONGO_URI=mongodb+srv://thomasheusdens:Pilou031003-@web2.j1djvfa.mongodb.net/dev5?retryWrites=true&w=majority
    PORT=5000
    ```
+   
 4. Add this line under Scripts in your package.json in the backend
    ```
    "dev": "nodemon server.js"

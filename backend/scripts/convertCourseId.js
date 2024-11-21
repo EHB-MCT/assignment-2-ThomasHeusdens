@@ -1,19 +1,17 @@
 const mongoose = require('mongoose');
-const Unit = require('./models/Unit'); // Adjust the path if necessary
-require('dotenv').config(); // Ensure environment variables are loaded
+const Unit = require('../models/Unit');
+require('dotenv').config(); 
 
 /**
  * Converts all `courseId` fields in the `Units` collection to `ObjectId`.
  * This function is intended to be run only once using Node.js when new data is added 
  * to the `Units` collection with `courseId` stored as strings.
  * 
- * Usage: Run `node convertCourseId.js` in the terminal.
- * 
- * @function
- * @async
- * @param {void} None - This function does not accept any parameters.
- * @returns {Promise<void>} Resolves when the operation is complete and logs the number of modified documents.
- * - Logs a message indicating the number of documents updated or an error if the operation fails.
+ * Usage:
+ * First: Run `cd backend\scripts`  
+ * Then: Run `node convertCourseId.js` in the terminal.
+ *
+ * Logs a message indicating the number of documents updated or an error if the operation fails.
  */
 
 async function convertCourseIdToObjectId() {
