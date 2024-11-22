@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode';
 import Courses from "../components/Courses";
 
 /**
- * The Home component fetches available courses and displays them
- * using the `Courses` component. It also includes login, register,
- * and logout buttons based on the user's authentication state.
+ * The Home component fetches available courses, calculates progress,
+ * and displays them using the `Courses` component.
+ * It also includes login, register, and logout buttons based on the user's authentication state.
  * 
  * @returns {JSX.Element} The Home component displaying a list of courses and navigation buttons.
  */
 function Home() {
   const [courses, setCourses] = useState([]);
+  const [progress, setProgress] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
@@ -20,18 +22,54 @@ function Home() {
    */
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); 
+    setIsLoggedIn(!!token);
   }, []);
 
   /**
-   * Fetches course data from the backend API when the component mounts.
-   * Updates the `courses` state with the retrieved data.
+   * Fetches course data from the backend API and user progress for each course.
    */
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/api/courses")
-      .then((response) => setCourses(response.data))
-      .catch((err) => console.log(err));
+    const fetchCourses = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        const coursesResponse = await axios.get("http://localhost:5000/api/courses");
+        const courses = coursesResponse.data;
+        setCourses(courses);
+
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.id;
+
+          const progressPromises = courses.map(async (course) => {
+            const unitsResponse = await axios.get(`http://localhost:5000/api/units/${course._id}`);
+            const viewedResponse = await axios.get(
+              `http://localhost:5000/api/user-activity/${userId}/course/${course._id}`,
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+          
+            const totalUnits = unitsResponse.data.length;
+            const uniqueViewedUnits = new Set(viewedResponse.data.viewedUnits).size;
+          
+            return {
+              courseId: course._id,
+              progress: totalUnits > 0 ? Math.round((uniqueViewedUnits / totalUnits) * 100) : 0,
+            };
+          });          
+
+          const progressData = await Promise.all(progressPromises);
+          const progressMap = progressData.reduce(
+            (acc, { courseId, progress }) => ({ ...acc, [courseId]: progress }),
+            {}
+          );
+          setProgress(progressMap);
+        }
+      } catch (error) {
+        console.error("Error fetching courses or progress:", error);
+      }
+    };
+
+    fetchCourses();
   }, []);
 
   /**
@@ -52,6 +90,7 @@ function Home() {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
       localStorage.removeItem("token");
       setIsLoggedIn(false);
       alert("You have been logged out.");
@@ -83,7 +122,7 @@ function Home() {
           )}
         </div>
       </div>
-      <Courses courses={courses} />
+      <Courses courses={courses} progress={progress} isLoggedIn={isLoggedIn} />
     </div>
   );
 }

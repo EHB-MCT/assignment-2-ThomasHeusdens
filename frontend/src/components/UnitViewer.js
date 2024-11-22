@@ -2,7 +2,6 @@ import React from 'react';
 
 /**
  * Renders the content and description of a unit, including an optional video if present.
- * 
  * @param {Object} unit - The unit to display.
  */
 function UnitViewer({ unit }) {

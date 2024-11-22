@@ -3,6 +3,8 @@ const { v4: uuidv4, validate: uuidValidate } = require("uuid");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 const router = express.Router();
 let activeSessions = {};
@@ -69,13 +71,21 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const sessionToken = uuidv4();
-      activeSessions[user.id] = { email: user.email, token: sessionToken };
+      const token = jwt.sign(
+        {
+          id: user.id, 
+          email: user.email,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+
+      activeSessions[user.id] = { email: user.email, token };
 
       res.status(200).send({
         status: "Auth Success",
         message: "You are logged in!",
-        data: { username: user.username, email: user.email, token: sessionToken },
+        data: { username: user.username, email: user.email, token },
       });
     } else {
       res.status(401).send({
@@ -91,26 +101,25 @@ router.post("/login", async (req, res) => {
   }
 });
 
+
 /**
  * POST /auth/logout
- * Logs out a user by removing their session.
+ * Logs out a user by "blacklisting" their token or notifying the client.
  * @returns {Object} A success message or an error response.
  */
 router.post("/logout", (req, res) => {
   const token = req.headers.authorization?.split("Bearer ")[1];
-  if (token) {
-    const userId = Object.keys(activeSessions).find((id) => activeSessions[id].token === token);
-    if (userId) {
-      delete activeSessions[userId];
-      return res.status(200).send({
-        status: "Logged Out",
-        message: "You have successfully logged out",
-      });
-    }
+
+  if (!token) {
+    return res.status(401).send({
+      status: "Auth Error",
+      message: "No token provided for logout",
+    });
   }
-  res.status(401).send({
-    status: "Auth Error",
-    message: "You must be logged in to log out",
+
+  res.status(200).send({
+    status: "Logged Out",
+    message: "You have successfully logged out",
   });
 });
 
@@ -123,30 +132,26 @@ async function getNextSequenceValue(sequenceName) {
   try {
     const countersCollection = mongoose.connection.collection("Counters");
 
-    // Ensure the counter exists; if not, create it with an initial sequenceValue
     let sequenceDocument = await countersCollection.findOne({ _id: sequenceName });
     if (!sequenceDocument) {
       sequenceDocument = { _id: sequenceName, sequenceValue: 0 };
       await countersCollection.insertOne(sequenceDocument);
     }
 
-    // Increment the sequence value and return the updated document
     const result = await countersCollection.findOneAndUpdate(
       { _id: sequenceName },
       { $inc: { sequenceValue: 1 } },
       {
-        returnDocument: "after", // Ensure updated document is returned
+        returnDocument: "after",
         upsert: true,
       }
     );
 
-    // Validate and extract the sequence value
     if (!result || typeof result.sequenceValue !== "number") {
       console.error("Debug: Result structure is invalid", result.sequenceValue);
       throw new Error("Invalid sequence value returned");
     }
 
-    // Return the updated sequence value
     console.log("Successfully generated new sequence value:", result.sequenceValue);
     return result.sequenceValue;
   } catch (error) {

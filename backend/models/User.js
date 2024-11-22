@@ -14,4 +14,8 @@ const UserSchema = new mongoose.Schema({
   dateJoined: { type: Date, default: Date.now },
 });
 
+/**
+ * Exports the User model to interact with the Users collection in MongoDB.
+ * @returns {Model} The User model for querying and manipulating User data
+ */
 module.exports = mongoose.model("User", UserSchema);

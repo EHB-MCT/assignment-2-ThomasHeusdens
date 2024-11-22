@@ -11,26 +11,25 @@ import axios from "axios";
  */
 function Login() {
     const navigate = useNavigate();
-  /**
-   * Handles form submission for login.
-   * Sends a POST request to the backend with user credentials.
-   * @param {Object} formData - The data entered by the user in the login form.
-   */
-  const handleLogin = async (formData) => {
-    try {
-      const response = await axios.post("http://localhost:5000/auth/login", formData);
-      console.log(response.data);
-      navigate("/");
-      alert("Login successful!");
-      // Store the token (e.g., in localStorage)
-      localStorage.setItem("token", response.data.data.token);
-    } catch (error) {
-      console.error(error.response?.data?.message || "Login failed!");
-      alert(error.response?.data?.message || "Login failed!");
-    }
-  };
+    /**
+     * Handles form submission for login.
+     * Sends a POST request to the backend with user credentials.
+     * @param {Object} formData - The data entered by the user in the login form.
+     */
+    const handleLogin = async (formData) => {
+        try {
+        const response = await axios.post("http://localhost:5000/auth/login", formData);
+        console.log(response.data);
+        navigate("/");
+        alert("Login successful!");
+        localStorage.setItem("token", response.data.data.token);
+        } catch (error) {
+        console.error(error.response?.data?.message || "Login failed!");
+        alert(error.response?.data?.message || "Login failed!");
+        }
+    };
 
-  return <AuthForm type="Login" onSubmit={handleLogin} />;
+    return <AuthForm type="Login" onSubmit={handleLogin} />;
 }
 
 /**

@@ -5,24 +5,36 @@ import Home from './pages/Home';
 import CoursePage from './pages/CoursePage';
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ProtectedRoute from './components/ProtectedRoute'; 
+
 
 /**
  * The main application component.
- * Sets up the routing structure for the application using React Router.
- * @returns {JSX.Element} The app component with configured routes.
+ * Configures the routing structure for the application using React Router.
+ * Includes protected routes that require user authentication.
+ * 
+ * @returns {JSX.Element} The App component with the defined routes and protected navigation.
  */
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/courses/:courseId" element={<CoursePage />} />
+        <Route
+          path="/courses/:courseId"
+          element={
+            <ProtectedRoute>
+              <CoursePage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
 }
+
 
 /**
  * Exports the App component as the default export.

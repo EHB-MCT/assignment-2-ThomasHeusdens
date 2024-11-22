@@ -86,6 +86,25 @@
   align-items: center;
 }
 
+.courseCard p {
+  font-size: 14px;
+  color: #666;
+}
+
+.courseCard .viewCourseButton {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.courseCard .viewCourseButton:hover {
+  background-color: #0056b3;
+}
+
 .header {
   width: 100%;
   display: flex;

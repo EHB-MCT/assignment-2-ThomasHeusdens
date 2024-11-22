@@ -10,8 +10,6 @@ require('dotenv').config();
  * Usage:
  * First: Run `cd backend\scripts`  
  * Then: Run `node convertCourseId.js` in the terminal.
- *
- * Logs a message indicating the number of documents updated or an error if the operation fails.
  */
 
 async function convertCourseIdToObjectId() {
@@ -22,7 +20,6 @@ async function convertCourseIdToObjectId() {
     });
     console.log("Connected to MongoDB.");
 
-    // Update courseId fields
     const result = await Unit.updateMany(
       {},
       [{ $set: { courseId: { $toObjectId: "$courseId" } } }]
