@@ -20,6 +20,6 @@ const UnitSchema = new mongoose.Schema({
 
 /**
  * Exports the Unit model to interact with the Units collection in MongoDB.
- * @returns {Unit} The Unit model for querying and manipulating unit data
+ * @returns {Model} The Unit model for querying and manipulating unit data
  */
 module.exports = mongoose.model('Unit', UnitSchema);
