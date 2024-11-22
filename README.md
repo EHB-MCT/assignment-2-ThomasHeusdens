@@ -1,6 +1,6 @@
 # **Can Academy**
 
-A simplified Khan Academy-like platform designed to deliver educational content, track user engagement, and analyze learning behaviors. Built using **React** for the frontend, **Node.js** for the backend, and **MongoDB** for data storage.
+A simplified Khan Academy-like platform designed track user engagement, and analyze learning behaviors. Built using **React** for the frontend, **Node.js** for the backend, and **MongoDB** for data storage.
 
 ---
 
@@ -21,11 +21,10 @@ This project is part of an academic exercise to learn data aggreggation and data
 ## **Why Is It Useful**
 
 Educational platforms are vital for modern learning environments. This project explores how to:
-1. Present educational resources interactively.
-2. Track and improve engagement using collected data.
-3. Enable personalized learning paths by analyzing user activity.
+1. Track and improve engagement using collected data.
+2. Enable personalized learning paths by analyzing user activity.
 
-The insights from this project can be extended to improve educational resource delivery and user experience design.
+The insights from this project can be extended to improve user experience design.
 
 ---
 
@@ -54,7 +53,7 @@ To set up and run the project locally:
 3. Create a `.env` file in the `backend` folder:
    ```
    MONGO_URI=mongodb+srv://thomasheusdens:Pilou031003-@web2.j1djvfa.mongodb.net/dev5?retryWrites=true&w=majority
-   PORT=5000
+   JWT_SECRET=i_dont_know_what_this_is
    ```
    
 4. Add this line under Scripts in your package.json in the backend
@@ -93,11 +92,9 @@ If you encounter any issues:
 ## **Status of the Project**
 
 This project is currently in the **development phase**. 
-- Basic functionality, such as content listing and API integration, is complete.
+- Basic functionality, such as content listing, API integration, user authentication, enhanced activity tracking, is complete.
 - Future improvements include:
-  - User authentication.
-  - Enhanced engagement tracking.
-  - Recommendation algorithms.
+  - User interactivity tracking such as how much the user scrolled on a webpage.
 
 ---
 

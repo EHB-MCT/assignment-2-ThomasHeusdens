@@ -11,9 +11,7 @@ const Unit = require('../models/Unit');
 router.get('/:courseId', async (req, res) => {
   try {
     const units = await Unit.find({ courseId: req.params.courseId });
-    console.log("Course ID received:", req.params.courseId);
     res.json(units);
-    console.log("Units fetched:", units);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
