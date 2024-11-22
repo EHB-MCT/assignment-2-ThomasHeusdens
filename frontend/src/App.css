@@ -86,6 +86,38 @@
   align-items: center;
 }
 
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.authButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.authButton {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.authButton:hover {
+  background-color: #0056b3;
+}
+
+.header h1 {
+  flex: 1;
+}
+
 .courses {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -174,6 +206,57 @@
 .finishCourseButton:hover {
   background-color: #03a706;
 }
+
+.authForm {
+  width: 300px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.authForm h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.authForm div {
+  margin-bottom: 15px;
+}
+
+.authForm label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.authForm input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.authForm button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.authForm button:hover {
+  background-color: #0056b3;
+}
+
+.authForm p {
+  text-align: center;
+}
+
 
 @media (max-width: 1200px) {
   .courses {
