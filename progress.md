@@ -40,7 +40,7 @@
   - Pushed the project to GitHub with a meaningful commit message.
 
 
-- **Outcome**: Basic project structure is ready. Backend API for fetching courses is functional. Frontend is integrated with the backend and displays courses. Data retrieval and display are working as expected. Project is well-documented and uploaded to GitHub.
+- **Outcome**: Basic project structure is ready. Backend API for fetching courses is functional. Frontend is integrated with the backend and displays courses. Data retrieval and display are working as expected. Code is clean, modular, and well-documented, ensuring maintainability. All changes are successfully merged into the `main` branch.
 
 ---
 
@@ -77,7 +77,7 @@
   - Updated `Home.js` to focus on fetching and passing data to the `Courses` component.
   - Simplified `Home.js` and added detailed function comments for clarity.
 
-- **Outcome**: Fully functional `CoursePage` with a sidebar and detailed unit viewer. Backend supports unit data and retrieves units dynamically based on `courseId`. Database populated with rich sample data for courses and units. Frontend components are modular and well-documented, improving code readability. Navigation between pages and units works seamlessly.
+- **Outcome**: Fully functional `CoursePage` with a sidebar and detailed unit viewer. Backend supports unit data and retrieves units dynamically based on `courseId`. Database populated with rich sample data for courses and units. Frontend components are modular and well-documented, improving code readability. Navigation between pages and units works seamlessly. Code is clean, modular, and well-documented, ensuring maintainability. All changes are successfully merged into the `main` branch.
 
 ---
 
@@ -138,7 +138,21 @@
 
 ## **Day 4**
 
-- **Outcome**: 
+- **Task**: Implemented user behavior tracking.
+
+  - Added a feature to track how much time a user spends on a unit page.
+  - Created a new UserBehavior schema in models/UserBehavior.js to log user interactions:
+    - Fields include userId, courseId, unitId, timeSpent, videoIncluded, and date.
+  - Built a backend API endpoint (userBehaviorRoutes.js) to:
+    - Log the time spent on a unit page.
+    - Include a flag (videoIncluded) to indicate whether the unit contains a video.
+    - Ensure proper error handling and data validation.
+  - Integrated behavior tracking into the frontend:
+    - Started a timer when the user enters a unit.
+    - Logged the total time spent when the user leaves the unit or navigates away.
+    - Prevented duplicate entries by using useRef to manage logging state.
+
+- **Outcome**: Fully functional user behavior tracking for unit pages. Accurate logging of time spent, with duplicate entries and premature logs eliminated. Backend and frontend are seamlessly integrated to handle behavior tracking. Code is clean, modular, and well-documented, ensuring maintainability. All changes are successfully merged into the `main` branch.
 
 ---
 
@@ -149,4 +163,4 @@
 ---
 
 ## **Next Steps**
-- Implement user interactivity tracking (such as: track how long a user stays on the page, how much it scrolls...)
+- Implement user behavior tracking part 2: Track if the user scrolls down the page of a unit and how much % of it.

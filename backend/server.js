@@ -5,7 +5,7 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 /**
  * Middleware to enable Cross-Origin Resource Sharing (CORS).
@@ -30,16 +30,13 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .catch(err => console.log(err));
 
 /**
- * API routes for course and unit-related operations.
- * - /api/courses: Handles routes for course-related operations.
- * - /api/units: Handles routes for unit-related operations.
- * - /auth: Handles routes for authentication (register, login, logout).
- * - /api/user-activity: Handles routes for user-activity.
+ * API routes for courses, units, authentication, user-activity and behaviour operations.
  */
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/units', require('./routes/unitRoutes'));
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/api/user-activity', require('./routes/userActivityRoutes'));
+app.use("/api/user-behavior", require("./routes/userBehaviorRoutes"));
 
 /**
  * Starts the Express server on the specified port.
