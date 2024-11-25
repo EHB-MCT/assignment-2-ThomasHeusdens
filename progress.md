@@ -158,9 +158,23 @@
 
 ## **Day 5**
 
-- **Outcome**: 
+- **Task**: Refined Backend API
+  - Refracted every UserBehavior to UserTimeSpent.
+  - Updated the `/time-spent` endpoint to check if an entry already exists for a specific user, course, and unit. If found, the `timeSpent` is added to the existing value; otherwise, a new entry is created.
+  - Modified the `UserScrollPercentage` schema and related endpoints to include a `videoIncluded` field to track whether the unit contains a video.
+
+- **Task**: Improved Scroll Tracking
+  - Ensured that only the highest scroll percentage is logged when leaving a unit or switching units, with redundant entries being deleted from the database.
+  - Implemented a fix to reset the scroll position to the top of the page when navigating to a new unit.
+
+- **Task**: Code Optimization:
+  - Simplified and documented key functions, ensuring maintainability and readability.
+  - Enhanced cleanup logic for tracking and logging user behavior to prevent unnecessary database writes.
+
+- **Outcome**: The scroll tracking was refined to ensure that only the highest scroll percentage is logged when leaving a unit, with redundant entries being deleted, and the page now resets to the top when navigating to a new unit. For time tracking, the /time-spent endpoint was updated to add new time spent to existing entries for a user, course, and unit instead of creating duplicates. These changes optimize data accuracy and enhance the user behavior tracking system. Code is clean, modular, and well-documented, ensuring maintainability. All changes are successfully merged into the `main` branch.
 
 ---
 
 ## **Next Steps**
-- Implement user behavior tracking part 2: Track if the user scrolls down the page of a unit and how much % of it.
+- Visualise the data.
+- Update ReadMe with bronvermelding.

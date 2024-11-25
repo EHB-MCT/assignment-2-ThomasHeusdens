@@ -19,9 +19,103 @@ function CoursePage() {
   const startTimeRef = useRef(null);
   const isLoggingRef = useRef(false);
   const [isFirstUnitLogged, setIsFirstUnitLogged] = useState(false);
-  const hasLoggedRef = useRef(false); 
+  const hasLoggedRef = useRef(false);
   const isLastUnit = selectedUnit && units.length > 0 && units[units.length - 1]._id === selectedUnit._id;
   const navigate = useNavigate();
+  const [maxScrollPercentage, setMaxScrollPercentage] = useState(0);
+
+  /**
+   * Deletes all unnecessary scroll percentage records for the current unit, keeping only the highest one.
+   * @param {Object} selectedUnit - The currently selected unit. Used to identify which unit's records to clean up.
+   * @param {string} courseId - The ID of the course to which the unit belongs.
+   */
+  const deleteExtraScrollPercentages = useCallback(async () => {
+    if (!selectedUnit) return; 
+  
+    const token = localStorage.getItem('token');
+    if (!token) return;
+  
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1])); 
+      const userId = String(decodedToken.id);
+  
+      await axios.delete(
+        'http://localhost:5000/api/user-behavior/scroll-percentages',
+        {
+          data: {
+            userId,
+            courseId,
+            unitId: selectedUnit._id,
+          },
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log(`Deleted unnecessary scroll percentages for unit ${selectedUnit.title}`);
+    } catch (error) {
+      console.error('Error deleting extra scroll percentages:', error);
+    }
+  }, [selectedUnit, courseId]);  
+  
+  /**
+   * Logs the highest scroll percentage achieved for the current unit to the backend.
+   * @param {Object} selectedUnit - The currently selected unit. Required to identify the unit being logged.
+   * @param {number} maxScrollPercentage - The highest scroll percentage tracked during the user's session.
+   * @param {string} courseId - The ID of the course to which the unit belongs.
+   */
+  const logScrollPercentage = useCallback(async () => {
+    if (!selectedUnit || maxScrollPercentage === 0) return;
+
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const userId = String(decodedToken.id);
+
+      await axios.post(
+        'http://localhost:5000/api/user-behavior/scroll-percentage',
+        {
+          userId,
+          courseId,
+          unitId: selectedUnit._id,
+          scrollPercentage: maxScrollPercentage,
+          videoIncluded: !!selectedUnit.videoURL,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log(`Logged scroll percentage: ${maxScrollPercentage}% for unit ${selectedUnit.title}`);
+    } catch (error) {
+      console.error('Error logging scroll percentage:', error);
+    }
+  }, [selectedUnit, maxScrollPercentage, courseId]);
+
+  /**
+   * Tracks the user's scroll progress on the current unit and logs the highest scroll percentage upon leaving the unit.
+   * @param {Function} logScrollPercentage - A callback function to log the highest scroll percentage to the backend.
+   * @param {number} maxScrollPercentage - The current maximum scroll percentage tracked during the user's session.
+   * @returns {Function} Cleanup function that removes the scroll event listener and triggers `logScrollPercentage`.
+   */
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = window.scrollY;
+      const percentage = Math.min(100, (scrolled / scrollHeight) * 100);
+
+      if (percentage > maxScrollPercentage) {
+        setMaxScrollPercentage(percentage); 
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      logScrollPercentage();
+    };
+  }, [logScrollPercentage, maxScrollPercentage]);
+   
 
   /**
   * Logs the time spent on the unit to the backend.
@@ -49,7 +143,7 @@ function CoursePage() {
       const userId = String(decodedToken.id);
 
       await axios.post(
-        'http://localhost:5000/api/user-behavior',
+        'http://localhost:5000/api/user-behavior/time-spent',
         {
           userId,
           courseId,
@@ -125,18 +219,23 @@ function CoursePage() {
     }
 
     return () => {
-      if (hasLoggedRef.current) {
-        logTimeSpent();
+      if (hasLoggedRef.current && startTimeRef.current) {
+        const timeSpent = Math.floor((Date.now() - startTimeRef.current) / 1000);
+        if (timeSpent > 0) {
+          logTimeSpent();
+        }
       } else {
         hasLoggedRef.current = true;
       }
     };
-  }, [selectedUnit, logTimeSpent]);
+  }, [selectedUnit, logTimeSpent, isFirstUnitLogged]);
 
   /**
    * Handles "Exit" button click.
    */
   const handleExit = () => {
+    deleteExtraScrollPercentages();
+    logScrollPercentage();
     logTimeSpent();
     navigate('/');
   };
@@ -185,12 +284,16 @@ function CoursePage() {
 
   /**
    * Handles when the user navigates to a new unit or leaves the page.
-   * Tracks and logs the time spent on the previous unit.
    */
   const handleUnitSelect = (unit) => {
+    deleteExtraScrollPercentages();
+    logScrollPercentage();
+    setMaxScrollPercentage(0);
     logTimeSpent(); 
     setSelectedUnit(unit);
     logUnitView(unit);
+
+    window.scrollTo(0, 0);
   };
 
   /**
