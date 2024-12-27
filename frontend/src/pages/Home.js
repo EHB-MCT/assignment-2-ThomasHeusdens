@@ -123,6 +123,11 @@ function Home() {
         </div>
       </div>
       <Courses courses={courses} progress={progress} isLoggedIn={isLoggedIn} />
+      <Link to="/general-analytics">
+        <button className="generalAnalyticsButton">
+         General Analytics
+        </button>
+      </Link>
     </div>
   );
 }

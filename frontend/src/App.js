@@ -6,7 +6,8 @@ import CoursePage from './pages/CoursePage';
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from './components/ProtectedRoute'; 
-
+import CourseAnalytics from './pages/CourseAnalytics';
+import GeneralAnalytics from "./pages/GeneralAnalytics";
 
 /**
  * The main application component.
@@ -30,6 +31,20 @@ function App() {
         />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route 
+          path="/analytics/:courseId" 
+          element={
+          <ProtectedRoute>
+            <CourseAnalytics />
+          </ProtectedRoute>
+        } />
+        <Route 
+          path="/general-analytics" 
+          element={
+            <ProtectedRoute>
+              <GeneralAnalytics />
+            </ProtectedRoute>
+          } />
       </Routes>
     </Router>
   );

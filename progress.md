@@ -175,6 +175,57 @@
 
 ---
 
+## **Day 6**
+
+- **Task**: Improved Course Analytics
+  - Enhanced the `CourseAnalytics` page to display user behavior data for specific courses.
+  - Added two grouped bar charts:
+    - **Scroll Behavior**: Displays scroll percentages for units grouped by units with and without videos.
+    - **Time Spent**: Displays time spent on units grouped by units with and without videos.
+  - Addressed issues with displaying two separate bars for units with and without videos:
+    - Fixed the logic to ensure units are correctly grouped and averaged by video inclusion.
+    - Updated chart configurations to support proper grouping and labeling of bars.
+
+- **Task**: Experimented with Chart Libraries
+  - Initially tried using **D3.js** for flexible custom charts but faced challenges with integration into React and complexity for grouped bar charts.
+  - Switched to **AG Charts**, which provided an easier integration and a robust API for grouped bar charts.
+  - Attempted to use a **Calendar Chart** to visualize user activity over time:
+    - Discovered it was better suited for enterprise-scale data.
+    - Decided it was not appropriate for the current project scope and reverted to bar charts.
+
+- **Outcome**: Fully functional `CourseAnalytics` page displaying scroll percentages and time spent data, grouped by video inclusion. Addressed visualization challenges with grouped bar charts and chose AG Charts as the preferred library for its flexibility and ease of use. Successfully debugged and resolved grouping issues, ensuring accurate and meaningful data visualization for users. Code is clean, modular, and well-documented, ensuring maintainability. All changes are successfully merged into the `main` branch.
+
+---
+
+## **Day 7**
+
+- **Task**: Visualized General Analytics
+  - Added a new page, `GeneralAnalytics`, to display aggregated user behavior data for all courses.
+  - Implemented two grouped bar charts:
+    - **Scroll Behavior**: Displays average scroll percentages for courses grouped by units with and without videos.
+    - **Time Spent**: Displays average time spent for courses grouped by units with and without videos.
+  - Fetched data dynamically from the backend, including:
+    - All courses, units, scroll percentages, and time spent data.
+  - Processed data on the frontend to calculate grouped averages for visualization.
+  - Enhanced chart responsiveness and styling for better user experience.
+
+- **Task**: Improved Navigation
+  - Added a "General Analytics" button on the homepage to navigate to the analytics page.
+  - Styled navigation components for consistency with the project design.
+
+- **Task**: Backend Updates
+  - Created new API endpoints for fetching all scroll and time data across courses to support general analytics.
+  - Refactored database queries to optimize performance and accuracy.
+
+- **Task**: Code Optimization
+  - Consolidated repetitive code for chart options and data processing.
+  - Enhanced logging for debugging data inconsistencies.
+  - Added detailed comments to new functions for clarity and maintainability.
+
+- **Outcome**: Fully functional `General Analytics` page with aggregated charts for user behavior across all courses. Improved navigation flow and backend support for efficient data retrieval. Code is clean, modular, and well-documented, ensuring maintainability. All changes are successfully merged into the `main` branch.
+
+---
+
 ## **Next Steps**
-- Visualise the data.
+- Show personal messages in the analytics.
 - Update ReadMe with bronvermelding.

@@ -3,6 +3,20 @@ const router = express.Router();
 const Unit = require('../models/Unit');
 
 /**
+ * GET /api/units
+ * Retrieves all units from the database.
+ * @returns {Array} A list of all units.
+ */
+router.get('/', async (req, res) => {
+  try {
+    const units = await Unit.find();
+    res.json(units);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/**
  * GET /api/units/:courseId
  * Retrieves all units for a specific course.
  * @param {String} courseId - The ID of the course to filter units by.
