@@ -89,6 +89,17 @@ router.get('/:userId/course/:courseId', async (req, res) => {
       res.status(500).send({ error: error.message });
     }
 });
+
+router.get("/", async (req, res) => {
+  try {
+    const texts = await UserActivity.find();
+    res.status(200).json(texts);
+  } catch (err) {
+    console.error("Error fetching user activities:", err.message);
+    res.status(500).json({ error: "Failed to fetch user activities." });
+  }
+});
+
   
 /**
  * Exports the router to handle userActivity-related API routes.

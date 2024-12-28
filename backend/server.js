@@ -38,6 +38,7 @@ app.use('/auth', require('./routes/authRoutes'));
 app.use('/api/user-activity', require('./routes/userActivityRoutes'));
 app.use("/api/user-behavior", require("./routes/userBehaviorRoutes"));
 app.use("/api/data-visualisation", require("./routes/dataVisualisationRoutes"));
+app.use("/api/personalised-texts", require("./routes/personalisedTextsRoutes"));
 
 /**
  * Starts the Express server on the specified port.

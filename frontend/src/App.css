@@ -371,12 +371,19 @@
   border-radius: 10px;
 }
 
-.timeSpent h1, .scrollPercentage h1 {
+.timeSpent h1, .scrollPercentage h1, .timePassed h1 {
   text-align: center;
   margin-top: 0;
 }
 
-.analyticsCourse h1{
+.timePassed {
+  padding: 25px;
+  border: black 2px solid;
+  margin: 40px 50px;
+  border-radius: 10px;
+}
+
+.analyticsCourse h1, .timePassed p{
   text-align: center;
 }
 
