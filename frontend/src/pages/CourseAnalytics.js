@@ -22,6 +22,12 @@ function CourseAnalytics() {
   const [lastViewedMessage, setLastViewedMessage] = useState("");
   const navigate = useNavigate();
 
+  /**
+   * Calculates the number of days since the last unit in the specified course was viewed.
+   * 
+   * @param {string} courseId - The ID of the course to check.
+   * @returns {Promise<number|null>} The number of days since the last view, or null if no activity is found.
+   */
   const calculateDaysSinceLastViewed = useCallback(async (courseId) => {
     try {
       const token = localStorage.getItem("token");
@@ -53,6 +59,13 @@ function CourseAnalytics() {
     }
   }, []);    
 
+  /**
+   * Calculates the average time spent on non-video units for a given dataset.
+   * 
+   * @param {Array} timeData - Array of time spent data for units.
+   * @param {Array} allUnits - Array of all units to filter non-video units.
+   * @returns {number} The average time spent on non-video units. Returns 0 if no non-video units are found.
+   */
   const calculateAverageTimeSpentNonVideo = useCallback((timeData, allUnits) => {
     const nonVideoUnits = allUnits.filter((unit) => !unit.videoURL);
   
@@ -72,6 +85,13 @@ function CourseAnalytics() {
     return countedUnits > 0 ? totalTime / countedUnits : 0;
   }, []);  
 
+  /**
+   * Calculates the average scroll percentage for non-video units.
+   * 
+   * @param {Array} scrollData - Array of scroll data for units.
+   * @param {Array} allUnits - Array of all units to filter non-video units.
+   * @returns {number} The average scroll percentage for non-video units. Returns 0 if no non-video units are found.
+   */
   const calculateAverageScrollNonVideo = useCallback((scrollData, allUnits) => {
     const nonVideoUnits = allUnits.filter((unit) => !unit.videoURL);
   
@@ -91,6 +111,13 @@ function CourseAnalytics() {
     return countedUnits > 0 ? totalScroll / countedUnits : 0;
   }, []);  
 
+  /**
+   * Calculates the average time spent on video units.
+   * 
+   * @param {Array} timeData - Array of time spent data for units.
+   * @param {Array} allUnits - Array of all units to filter video units.
+   * @returns {number} The average time spent on video units. Returns 0 if no video units are found.
+   */
   const calculateAverageTimeSpentVideo = useCallback((timeData, allUnits) => {
     const videoUnits = allUnits.filter((unit) => unit.videoURL);
   
@@ -168,6 +195,13 @@ function CourseAnalytics() {
     return `${message.firstPartText} ${roundedAverage}% ${message.secondPartText}`;
   }, [personalisedTexts]);
   
+  /**
+   * Retrieves a personalized message based on the average value and type.
+   * 
+   * @param {number} average - The calculated average value.
+   * @param {string} type - The type of personalized message to retrieve.
+   * @returns {string} A personalized message corresponding to the provided average and type.
+   */
   const getPersonalizedMessageTime = useCallback((average, type) => {
   
     const message = personalisedTexts.find((text) => {

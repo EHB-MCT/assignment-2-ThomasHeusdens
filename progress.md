@@ -226,6 +226,37 @@
 
 ---
 
+## **Day 8**
+
+- **Task**: Added Personalized Messages for Analytics
+  - Enhanced the `CourseAnalytics` page to include personalized messages for each chart:
+    - **Scroll Behavior with Video**: Displays a dynamic message based on the user's average scroll percentage for video units.
+    - **Scroll Behavior without Video**: Displays a dynamic message based on the user's average scroll percentage for non-video units.
+    - **Time Spent with Video**: Displays a dynamic message based on the user's average time spent on video units.
+    - **Time Spent without Video**: Displays a dynamic message based on the user's average time spent on non-video units.
+    - **Days Since Last Viewed**: Displays a personalized message based on how many days have passed since the user last viewed a unit in the course.
+
+  - Created reusable functions to calculate averages and fetch personalized texts dynamically.
+  - Improved backend and frontend integration for handling personalized messages:
+    - Updated the backend API to fetch personalized texts from the database.
+    - Added logic in the frontend to process averages and display corresponding messages under each chart.
+
+- **Task**: Personalized Messages for General Analytics
+  - Added personalized messages for the `GeneralAnalytics` page:
+    - **Average Scroll General**: Displays a dynamic message based on the user's overall average scroll percentage across all courses.
+    - **Average Time General**: Displays a dynamic message based on the user's overall average time spent across all courses.
+  - Fetched all `averageScrollGeneral` and `averageTimeGeneral` texts from the database.
+  - Processed scroll and time data for all user activities to calculate overall averages.
+  - Added logic to dynamically match the calculated averages to the appropriate personalized message.
+
+- **Task**: Improved Code Modularity and Readability
+  - Refactored message fetching logic into a reusable function using the `useCallback` hook.
+  - Simplified chart configuration logic for both `CourseAnalytics` and `GeneralAnalytics` pages.
+  - Added detailed comments for all new functions to enhance code maintainability.
+
+- **Outcome**: Fully functional personalized messaging system for both `CourseAnalytics` and `GeneralAnalytics` pages. Users now receive tailored feedback based on their behavior, improving engagement and usability. Backend and frontend are seamlessly integrated to dynamically retrieve and display messages. Code is clean, modular, and well-documented, ensuring maintainability. All changes are successfully merged into the `main` branch.
+
+---
+
 ## **Next Steps**
-- Show personal messages in the analytics.
 - Update ReadMe with bronvermelding.

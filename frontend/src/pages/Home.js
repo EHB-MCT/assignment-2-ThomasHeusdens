@@ -5,9 +5,8 @@ import { jwtDecode } from 'jwt-decode';
 import Courses from "../components/Courses";
 
 /**
- * The Home component fetches available courses, calculates progress,
- * and displays them using the `Courses` component.
- * It also includes login, register, and logout buttons based on the user's authentication state.
+ * The Home component fetches available courses, calculates progress, and displays them using the `Courses` component.
+ * It also includes login, register, analytics and logout buttons based on the user's authentication state.
  * 
  * @returns {JSX.Element} The Home component displaying a list of courses and navigation buttons.
  */

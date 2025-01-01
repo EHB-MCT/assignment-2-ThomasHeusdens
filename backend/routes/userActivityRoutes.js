@@ -90,6 +90,10 @@ router.get('/:userId/course/:courseId', async (req, res) => {
     }
 });
 
+/**
+ * Handles a GET request to fetch all user activities.
+ * @returns {Array} A list of all user activities.
+ */
 router.get("/", async (req, res) => {
   try {
     const texts = await UserActivity.find();

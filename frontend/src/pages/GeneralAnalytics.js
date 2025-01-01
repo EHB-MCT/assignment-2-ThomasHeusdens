@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AgCharts } from "ag-charts-react";
@@ -6,7 +6,40 @@ import { AgCharts } from "ag-charts-react";
 function GeneralAnalytics() {
   const [scrollChartOptions, setScrollChartOptions] = useState(null);
   const [timeChartOptions, setTimeChartOptions] = useState(null);
+  const [personalisedTexts, setPersonalisedTexts] = useState([]);
+  const [scrollGeneralMessage, setScrollGeneralMessage] = useState("");
+  const [timeGeneralMessage, setTimeGeneralMessage] = useState("");
   const navigate = useNavigate();
+
+  /**
+   * Calculates the average of an array of numeric values.
+   * @param {Array<number>} values - Array of numeric values.
+   * @returns {number} The calculated average. Returns 0 if the array is empty.
+   */
+  const calculateAverageForText = useCallback((values) => {
+    if (!values.length) return 0;
+    const total = values.reduce((sum, value) => sum + value, 0);
+    return total / values.length;
+  }, []);
+  
+  /**
+   * Retrieves a personalized message based on the average value and type.
+   * @param {number} average - Calculated average value.
+   * @param {string} type - The type of personalized message.
+   * @param {Array} texts - Array of personalized texts.
+   * @returns {string} Personalized message.
+   */
+  const getPersonalizedMessage = useCallback((average, type) => {
+    const message = personalisedTexts.find(
+      (text) =>
+        text.type === type &&
+        average >= text.average[0] &&
+        average <= text.average[1]
+    );
+    if (!message) return "No personalized message available.";
+    const roundedAverage = Math.round(average);
+    return `${message.firstPartText} ${roundedAverage} ${message.secondPartText}`;
+  }, [personalisedTexts]);
 
   /**
    * Fetches and processes analytics data for all courses, including scroll percentages and time spent, 
@@ -34,16 +67,32 @@ function GeneralAnalytics() {
             { params: { userId }, headers: { Authorization: `Bearer ${token}` } }
           );
 
+        const textsResponse = await axios.get("http://localhost:5000/api/personalised-texts")
+
+        setPersonalisedTexts(textsResponse.data);
         const courses = coursesResponse.data;
         const units = unitsResponse.data;
         const scrollData = scrollResponse.data.data;
         const timeSpentData = timeResponse.data.data;
 
-        console.log('Raw API Data:', {
-          courses,
-          units,
-          scrollData
-        });
+        const averageScrollGeneral = calculateAverageForText(
+          scrollData.map((entry) => entry.scrollPercentage)
+        );
+        const averageTimeGeneral = calculateAverageForText(
+          timeSpentData.map((entry) => entry.timeSpent)
+        );
+
+        const scrollMessage = getPersonalizedMessage(
+          averageScrollGeneral,
+          "averageScrollGeneral"
+        );
+        const timeMessage = getPersonalizedMessage(
+          averageTimeGeneral,
+          "averageTimeGeneral"
+        );
+
+        setScrollGeneralMessage(scrollMessage);
+        setTimeGeneralMessage(timeMessage);
 
         /**
          * Processes scroll percentage data for each course and groups it into units with and without videos.
@@ -54,9 +103,6 @@ function GeneralAnalytics() {
          */
         const groupedScrollData = courses.map((course) => {
             const courseUnits = units.filter((unit) => unit.courseId === course._id);
-            
-            console.log(`\nProcessing course: ${course.title}`);
-            console.log('Total course units:', courseUnits.length);
             
             const courseScrollData = scrollData.filter(scroll => 
                 courseUnits.some(unit => unit._id === scroll.unitId)
@@ -69,17 +115,9 @@ function GeneralAnalytics() {
             const scrollWithoutVideo = courseScrollData
                 .filter(scroll => !scroll.videoIncluded)
                 .map(scroll => scroll.scrollPercentage);
-            
-            console.log('Scroll records with video:', scrollWithVideo.length);
-            console.log('Scroll records without video:', scrollWithoutVideo.length);
-            
+
             const withVideoAvg = calculateAverage(scrollWithVideo);
             const withoutVideoAvg = calculateAverage(scrollWithoutVideo);
-
-            console.log(`${course.title} averages:`, {
-                withVideo: withVideoAvg,
-                withoutVideo: withoutVideoAvg
-            });
 
             return {
                 courseName: course.title,
@@ -215,8 +253,7 @@ function GeneralAnalytics() {
                     text: "Courses",
                     },
                     label: {
-                    rotation: 335,  
-                    offset: 10, 
+                    rotation: 335
                     }
                 },
                 {
@@ -242,7 +279,7 @@ function GeneralAnalytics() {
     };
 
     fetchGeneralAnalytics();
-  }, []);
+  }, [calculateAverageForText, getPersonalizedMessage]);
 
   /**
    * Calculates the average of an array of numeric values.
@@ -273,10 +310,12 @@ function GeneralAnalytics() {
 
       <div className="generalScrollBehaviour">
         <AgCharts options={scrollChartOptions} />
+        <p>{scrollGeneralMessage}</p>
       </div>
 
       <div className="generalTimeBehaviour">
         <AgCharts options={timeChartOptions} />
+        <p>{timeGeneralMessage}</p>
       </div>
     </div>
   );
