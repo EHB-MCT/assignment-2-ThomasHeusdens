@@ -1,6 +1,6 @@
 # **Can Academy**
 
-A simplified Khan Academy-like platform designed track user engagement, and analyze learning behaviors. Built using **React** for the frontend, **Node.js** for the backend, and **MongoDB** for data storage.
+A simplified Khan Academy-like platform designed to track user engagement, and analyze learning behaviors. Built using **React** for the frontend, **Node.js** for the backend, and **MongoDB** for data storage.
 
 ---
 
